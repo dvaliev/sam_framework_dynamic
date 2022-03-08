@@ -2,11 +2,11 @@
 # IAM Policy and Role
 # ------------------------------------------------------------------------------
 resource "aws_iam_policy" "main" {
-  for_each    = can(var.policy_name) ? flatten([local.policy_list[var.policy_name]]) : []
+  for_each    = can(var.policy_name) ? local.policy_create : {}
   name        = "${local.policy_name}-${each.key}"
   path        = "/"
   description = "${local.policy_description} - ${each.key}"
-  policy      = each.value
+  policy      = local.policy_list[each.key]
 
   tags = merge(
     local.tags,
@@ -35,7 +35,7 @@ resource "aws_iam_role" "main" {
 }
 
 resource "aws_iam_role_policy_attachment" "main" {
-  for_each   = local.policy_list
+  for_each   = can(var.policy_name) ? local.policy_create : {}
   role       = aws_iam_role.main.name
   policy_arn = aws_iam_policy.main[each.key].arn
 }

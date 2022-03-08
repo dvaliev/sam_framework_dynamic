@@ -8,8 +8,8 @@
 
 #0. variable 
 variable policy_name {
-  type        = string
-  description = "choose policy"
+  type        = list(string)
+  description = "(Required) Provide the list of IAM policy names to attach to the role."
 }
 
 
